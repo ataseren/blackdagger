@@ -4,6 +4,8 @@ import Layout from './Layout';
 import Dashboard from './pages';
 import DAGDetails from './pages/dags/dag';
 import DAGs from './pages/dags';
+import Setup from './pages/setup'
+import DiffPage from './pages/diff'
 import { AppBarContext } from './contexts/AppBarContext';
 import { SWRConfig } from 'swr';
 import fetchJson from './lib/fetchJson';
@@ -46,6 +48,8 @@ function App({ config }: Props) {
               <Route path="/dags/:name/:tab" element={<DAGDetails />} />
               <Route path="/dags/:name/" element={<DAGDetails />} />
               <Route path="/search/" element={<Search />} />
+              <Route path="/setup" element={<Setup />} />
+              <Route path="/diff" element={<DiffPage />} />
             </Routes>
           </Layout>
         </BrowserRouter>

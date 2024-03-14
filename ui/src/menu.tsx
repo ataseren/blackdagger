@@ -8,6 +8,8 @@ import {
   faMagnifyingGlass,
   faTableList,
   faTerminal,
+  faHammer,
+  faCodeCompare,
 } from '@fortawesome/free-solid-svg-icons';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { Typography } from '@mui/material';
@@ -52,6 +54,16 @@ export const mainListItems = (
       icon={<Icon icon={faTerminal} />}
       to="http://:8090"
       external
+    />
+    <ListItem
+      text="Setup"
+      icon={<Icon icon={faHammer} />}
+      to="/setup"
+    />
+    <ListItem
+      text="Difference"
+      icon={<Icon icon={faCodeCompare} />}
+      to="/diff"
     />
   </React.Fragment>
 );
