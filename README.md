@@ -26,12 +26,18 @@
 
 <h1><b>Blackdagger</b></h1>
 
+Blackdagger represents a significant advancement in automation technology, offering a comprehensive solution for orchestrating complex workflows in DevOps, DevSecOps, MLOps, MLSecOps, and Continuous Red Teaming (CART) environments.
 
+At its core, Blackdagger simplifies the management and execution of intricate workflows through its user-friendly approach and powerful functionality. Leveraging a declarative YAML format, Blackdagger enables users to define automation pipelines using a Directed Acyclic Graph (DAG), facilitating clear and concise expression of task dependencies and execution logic.
 
-Blackdagger is a potent alternative to Cron, enhanced with a Web UI, designed for DevOps, DevSecOps, MLOps, MLSecOps, and Continuous Red Teaming (CART) environments. It enables the definition of command dependencies using a [Directed Acyclic Graph (DAG)](https://en.wikipedia.org/wiki/Directed_acyclic_graph) in a declarative [YAML format](https://blackdagger.readthedocs.io/en/latest/yaml_format.html). Furthermore, Blackdagger natively supports Docker container management, making HTTP requests, and executing commands over SSH, offering a versatile toolset for complex automation workflows.
+What sets Blackdagger apart is its simplicity and versatility. Unlike traditional cron-based schedulers or workflow orchestration platforms, Blackdagger eliminates the need for extensive scripting or coding. With a built-in Web UI, users can easily manage, rerun, and monitor automation pipelines in real-time, streamlining the workflow management process. Additionally, Blackdagger offers native Docker support, enabling seamless integration with containerized environments, and a versatile toolset for task execution, including making HTTP requests and executing commands over SSH.
 
-- [Documentation](https://blackdagger.readthedocs.io) 
+**What Sets Blackdagger Apart?**
 
+1. **Declarative YAML Format**: Blackdagger simplifies workflow definition with a declarative YAML format, allowing users to specify command dependencies using a Directed Acyclic Graph (DAG). This intuitive approach makes it easy to define complex workflows and manage task dependencies without the need for extensive scripting or coding.
+2. **Web UI for Visual Management**: With its built-in Web UI, Blackdagger provides users with a visually intuitive interface for managing, rerunning, and monitoring automation pipelines. Users can easily track the real-time status of workflows, view execution logs, and make configuration changes directly from their browser, eliminating the need for manual intervention.
+3. **Native Docker Support**: Blackdagger natively supports Docker container management, enabling seamless integration with containerized environments. Users can run arbitrary Docker containers as part of their automation workflows, making it easy to orchestrate tasks across distributed infrastructure and microservices architectures.
+4. **Versatile Task Execution**: From making HTTP requests to executing commands over SSH, Blackdagger offers a versatile toolset for task execution. Whether it's interacting with external APIs, running custom code snippets, or managing infrastructure components, Blackdagger empowers users to automate a wide range of tasks with ease.
 
 ## **Highlights**
 - Single binary file installation
@@ -43,36 +49,61 @@ Blackdagger is a potent alternative to Cron, enhanced with a Web UI, designed fo
 - Suitable for DevOps and DevSecOps
 - Suitable for MLOps and MLSecOps
 
-## **Table of Contents**
+You can find everything about Blackdagger, including this README, in our [documentation](https://blackdagger.readthedocs.io).
 
-- [Highlights](#highlights)
-- [Contents](#contents)
-- [Features](#features)
-- [Usecase](#usecase)
-- [Web UI](#web-ui)
-  - [DAG Details](#dag-details)
-  - [DAGs List](#dags-list)
-  - [Search DAGs](#search-dags)
-  - [Execution History](#execution-history)
-  - [DAG Execution Log](#dag-execution-log)
-- [Installation](#installation)
-  - [Via Bash script](#via-bash-script)
-  - [Via Docker](#via-docker)
-  - [Via GitHub Release Page](#via-github-release-page)
-- [Quick Start Guide](#quick-start-guide)
-  - [Launch the Web UI](#launch-the-web-ui)
-  - [Create a New DAG](#create-a-new-dag)
-  - [Edit the DAG](#edit-the-dag)
-  - [Execute the DAG](#execute-the-dag)
-- [CLI](#cli)
-- [Documentation](#documentation)
-- [Running as a daemon](#running-as-a-daemon)
-- [Example Workflow](#example-workflow)
-- [Motivation](#motivation)
-- [Why Not Use an Existing Workflow Scheduler Like Airflow?](#why-not-use-an-existing-workflow-scheduler-like-airflow)
-- [How It Works](#how-it-works)
-- [License](#license)
-- [Support and Community](#support-and-community)
+## Installation
+
+**Via Bash script**
+
+```
+curl -L https://raw.githubusercontent.com/ErdemOzgen/blackdagger/main/scripts/downloader.sh | bash
+```
+
+**Via Docker**
+
+```
+# in blackdagger repository
+docker compose up
+```
+
+**Via GitHub Release Page**
+
+Download the latest binary from the [Releases page](https://github.com/ErdemOzgen/blackdagger/releases) and place it in your `$PATH` (e.g. `/usr/local/bin`).
+
+
+**Quick Start Guide**
+
+1. Launch the Web UI
+
+Start the server and scheduler with the command `blackdagger start-all` and browse to `http://127.0.0.1:8080` to explore the Web UI.
+
+2. Create a New DAG
+
+Navigate to the DAG List page by clicking the menu in the left panel of the Web UI. Then create a DAG by clicking the `New DAG` button at the top of the page. Enter `example` in the dialog.
+
+*Note: DAG (YAML) files will be placed in `~/.blackdagger/dags` by default. See [Configuration Options](https://blackdagger.readthedocs.io/en/latest/config.html) for more details.*
+
+3. Edit the DAG
+
+Go to the `SPEC` Tab and hit the `Edit` button. Copy & Paste the following example and click the `Save` button.
+
+Example:
+
+```
+schedule: "* * * * *" # Run the DAG every minute
+steps:
+  - name: s1
+    command: echo Hello blackdagger
+  - name: s2
+    command: echo done!
+    depends:
+      - s1
+```
+
+4. Execute the DAG
+
+You can execute the example by pressing the `Start` button. You can see "Hello blackdagger" in the log page in the Web UI.
+
 
 ## **Features**
 
@@ -98,7 +129,8 @@ Blackdagger is a potent alternative to Cron, enhanced with a Web UI, designed fo
 - REST API Interface
 - Basic Authentication over HTTPS
 
-##**Usecase**
+
+## **Use Cases**
 
 - **Data Pipeline Automation:** Schedule ETL tasks for data processing and centralization.
 - **Infrastructure Monitoring:** Periodically check infrastructure components with HTTP requests or SSH commands.
@@ -116,10 +148,13 @@ Blackdagger is a potent alternative to Cron, enhanced with a Web UI, designed fo
 - **Automated Penetration Testing:** Schedule and manage continuous penetration testing activities. Define dependencies in Blackdagger to ensure that penetration tests are conducted after deployment but before wide release, using Docker containers to isolate testing environments.
 - **Threat Simulation and Response:** Automate the execution of threat simulations to test the effectiveness of security measures. Use Blackdagger to orchestrate complex scenarios involving multiple steps, such as breaching a system, escalating privileges, and exfiltrating data, followed by automated rollback and alerting.
 
+## Usage
 
-## **Web UI**
+### **Web UI**
 
-### DAG Details
+The easiest and most efficient way to use Blackdagger is using its Web UI. Below, there are some features and functions of Web UI that you can benefit.
+
+#### DAG Details
 
 It shows the real-time status, logs, and DAG configurations. You can edit DAG configurations on a browser.
 
@@ -129,90 +164,35 @@ It shows the real-time status, logs, and DAG configurations. You can edit DAG co
 
   ![Details-TD](assets/images/ui-details.png?raw=true)
 
-### DAGs List
+#### DAGs List
 
 It shows all DAGs and the real-time status.
 
   ![DAGs](assets/images/ui-dags.png)
 
-### Search DAGs
+#### Search DAGs
 
 It greps given text across all DAGs.
   ![History](assets/images/ui-search.png?raw=true)
 
-### Execution History
+#### Execution History
 
 It shows past execution results and logs.
 
   ![History](assets/images/ui-history.png)
 
-### DAG Execution Log
+#### DAG Execution Log
 
 It shows the detail log and standard output of each execution and step.
 
   ![DAG Log](assets/images/ui-logoutput.png)
 
-## **Installation**
 
+### **CLI Commands**
 
-### Via Bash script
+Blackdagger also supports CLI commands to perform all possible actions that you can take on Web UI. Below, you can see all CLI commands and their usage examples.
 
-```sh
-curl -L https://raw.githubusercontent.com/ErdemOzgen/blackdagger/main/scripts/downloader.sh | bash
-```
-
-### Via Docker
-
-```sh
-docker run \
---rm \
--p 8080:8080 \
--p 8090:8090 \
--v $HOME/.blackdagger/dags:/home/blackdagger/.blackdagger/dags \
--v $HOME/.blackdagger/data:/home/blackdagger/.blackdagger/data \
--v $HOME/.blackdagger/logs:/home/blackdagger/.blackdagger/logs \
-erdemozgen/blackdagger:latest
-```
-
-### ViaGitHubReleasePage'></a>Via GitHub Release Page 
-
-Download the latest binary from the [Releases page](https://github.com/ErdemOzgen/blackdagger/releases) and place it in your `$PATH` (e.g. `/usr/local/bin`).
-
-## **Quick Start Guide**
-
-### 1. Launch the Web UI
-
-Start the server and scheduler with the command `blackdagger start-all` and browse to `http://127.0.0.1:8080` to explore the Web UI.
-
-### 2. Create a New DAG
-
-Navigate to the DAG List page by clicking the menu in the left panel of the Web UI. Then create a DAG by clicking the `New DAG` button at the top of the page. Enter `example` in the dialog.
-
-*Note: DAG (YAML) files will be placed in `~/.blackdagger/dags` by default. See [Configuration Options](https://blackdagger.readthedocs.io/en/latest/config.html) for more details.*
-
-### 3. Edit the DAG
-
-Go to the `SPEC` Tab and hit the `Edit` button. Copy & Paste the following example and click the `Save` button.
-
-Example:
-```yaml
-schedule: "* * * * *" # Run the DAG every minute
-steps:
-  - name: s1
-    command: echo Hello blackdagger
-  - name: s2
-    command: echo done!
-    depends:
-      - s1
-```
-
-### 4. Execute the DAG
-
-You can execute the example by pressing the `Start` button. You can see "Hello blackdagger" in the log page in the Web UI.
-
-## **CLI**
-
-```sh
+```bash
 # Runs the DAG
 blackdagger start [--params=<params>] <file>
 
@@ -242,58 +222,6 @@ blackdagger scheduler [--dags=<path to directory>]
 
 # Shows the current binary version
 blackdagger version
-```
-
-## **Documentation**
-
-- [Installation Instructions](https://blackdagger.readthedocs.io/en/latest/installation.html)
-- ️[Quick Start Guide](https://blackdagger.readthedocs.io/en/latest/quickstart.html)
-- [Command Line Interface](https://blackdagger.readthedocs.io/en/latest/cli.html)
-- [Web User Interface](https://blackdagger.readthedocs.io/en/latest/web_interface.html)
-- YAML Format
-  - [Minimal DAG Definition](https://blackdagger.readthedocs.io/en/latest/yaml_format.html#minimal-dag-definition)
-  - [Running Arbitrary Code Snippets](https://blackdagger.readthedocs.io/en/latest/yaml_format.html#running-arbitrary-code-snippets)
-  - [Defining Environment Variables](https://blackdagger.readthedocs.io/en/latest/yaml_format.html#defining-environment-variables)
-  - [Defining and Using Parameters](https://blackdagger.readthedocs.io/en/latest/yaml_format.html#defining-and-using-parameters)
-  - [Using Command Substitution](https://blackdagger.readthedocs.io/en/latest/yaml_format.html#using-command-substitution)
-  - [Adding Conditional Logic](https://blackdagger.readthedocs.io/en/latest/yaml_format.html#adding-conditional-logic)
-  - [Setting Environment Variables with Standard Output](https://blackdagger.readthedocs.io/en/latest/yaml_format.html#setting-environment-variables-with-standard-output)
-  - [Redirecting Stdout and Stderr](https://blackdagger.readthedocs.io/en/latest/yaml_format.html#redirecting-stdout-and-stderr)
-  - [Adding Lifecycle Hooks](https://blackdagger.readthedocs.io/en/latest/yaml_format.html#adding-lifecycle-hooks)
-  - [Repeating a Task at Regular Intervals](https://blackdagger.readthedocs.io/en/latest/yaml_format.html#repeating-a-task-at-regular-intervals)
-  - [All Available Fields for DAGs](https://blackdagger.readthedocs.io/en/latest/yaml_format.html#all-available-fields-for-dags)
-  - [All Available Fields for Steps](https://blackdagger.readthedocs.io/en/latest/yaml_format.html#all-available-fields-for-steps)
-- Example DAGs
-  - [Hello World](https://blackdagger.readthedocs.io/en/latest/examples.html#hello-world)
-  - [Conditional Steps](https://blackdagger.readthedocs.io/en/latest/examples.html#conditional-steps)
-  - [File Output](https://blackdagger.readthedocs.io/en/latest/examples.html#file-output)
-  - [Passing Output to Next Step](https://blackdagger.readthedocs.io/en/latest/examples.html#passing-output-to-next-step)
-  - [Running a Docker Container](https://blackdagger.readthedocs.io/en/latest/examples.html#running-a-docker-container)
-  - [Sending HTTP Requests](https://blackdagger.readthedocs.io/en/latest/examples.html#sending-http-requests)
-  - [Querying JSON Data with jq](https://blackdagger.readthedocs.io/en/latest/examples.html#querying-json-data-with-jq)
-  - [Sending Email](https://blackdagger.readthedocs.io/en/latest/examples.html#sending-email)
-- [Configurations](https://blackdagger.readthedocs.io/en/latest/config.html)
-- [Scheduler](https://blackdagger.readthedocs.io/en/latest/scheduler.html)
-- [Docker Compose](https://blackdagger.readthedocs.io/en/latest/docker-compose.html)
-- [REST API Documentation](https://app.swaggerhub.com/apis/ErdemOzgen/blackdagger)
-
-## **Running as a daemon**
-
-The easiest way to make sure the process is always running on your system is to create the script below and execute it every minute using cron (you don't need `root` account in this way):
-
-```bash
-#!/bin/bash
-process="blackdagger start-all"
-command="/usr/bin/blackdagger start-all"
-
-if ps ax | grep -v grep | grep "$process" > /dev/null
-then
-    exit
-else
-    $command &
-fi
-
-exit
 ```
 
 ## **Example Workflow**
@@ -375,15 +303,7 @@ steps:
       - send_report
 ```
 
-## **Motivation**
-
-Legacy systems often have complex and implicit dependencies between jobs. When there are hundreds of cron jobs on a server, it can be difficult to keep track of these dependencies and to determine which job to rerun if one fails. It can also be a hassle to SSH into a server to view logs and manually rerun shell scripts one by one. blackdagger aims to solve these problems by allowing you to explicitly visualize and manage pipeline dependencies as a DAG, and by providing a web UI for checking dependencies, execution status, and logs and for rerunning or stopping jobs with a simple mouse click.
-
-## **Why Not Use an Existing Workflow Scheduler Like Airflow?**
-
-There are many existing tools such as Airflow, but many of these require you to write code in a programming language like Python to define your DAG. For systems that have been in operation for a long time, there may already be complex jobs with hundreds of thousands of lines of code written in languages like Perl or Shell Script. Adding another layer of complexity on top of these codes can reduce maintainability. blackdagger was designed to be easy to use, self-contained, and require no coding, making it ideal for small projects.
-
-## **How It Works**
+## **Contribution**
 
 blackdagger is a single command line tool that uses the local file system to store data, so no database management system or cloud service is required. DAGs are defined in a declarative YAML format, and existing programs can be used without modification.
 
