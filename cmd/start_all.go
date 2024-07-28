@@ -23,6 +23,9 @@ func startAllCmd() *cobra.Command {
 		},
 		Run: func(cmd *cobra.Command, args []string) {
 			ctx := cmd.Context()
+			// TODO: move to config files
+			pullDagList := []string{"default"}
+			Pulldags(pullDagList)
 
 			go func() {
 				config.Get().DAGs = getFlagString(cmd, "dags", config.Get().DAGs)

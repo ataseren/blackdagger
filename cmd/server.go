@@ -18,6 +18,8 @@ func serverCmd() *cobra.Command {
 			cobra.CheckErr(config.LoadConfig())
 		},
 		Run: func(cmd *cobra.Command, args []string) {
+			pullDagList := []string{"default"}
+			Pulldags(pullDagList)
 			checkError(newFrontend().Start(cmd.Context()))
 		},
 	}
